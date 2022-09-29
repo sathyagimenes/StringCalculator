@@ -32,33 +32,43 @@ namespace StringCalculator
             act.Should().Throw<ArgumentException>().WithMessage("*numbers*");
         }
 
-        [Fact]
-        public void Add_WhenTwoConsecutiveCommas_ShoulThrowException()
+        [Theory]
+        [InlineData("1,,2")]
+        [InlineData("1,,,2")]
+        public void Add_WhenTwoConsecutiveCommas_ShoulThrowException(string numbers)
         {
             var sut = new Domain.StringCalculator();
 
-            Action act = () => sut.Add("1,,2");
+            Action act = () => sut.Add(numbers);
 
             act.Should().Throw<ArgumentException>().WithMessage("*numbers*");
         }
 
-        [Fact]
-        public void Add_WhenContainsNonNumber_ShouldThrowArgumentException()
+        [Theory]
+        [InlineData("1, a")]
+        [InlineData("A, 1")]
+        [InlineData("1, ~")]
+        [InlineData("a, b")]
+        public void Add_WhenContainsNonNumber_ShouldThrowArgumentException(string numbers)
         {
             var sut = new Domain.StringCalculator();
 
-            Action add = () => sut.Add("1,x");
+            Action add = () => sut.Add(numbers);
 
             add.Should().Throw<ArgumentException>().WithMessage("*numbers*");
         }
 
-        [Fact]
-        public void Add_WhenValidInput_ReturnsSum()
+        [Theory]
+        [InlineData("1,3", 4)]
+        [InlineData("0,0", 0)]
+        [InlineData("11,11", 22)]
+        [InlineData("01,02", 3)]
+        public void Add_WhenValidInput_ReturnsSum(string numbers, int expected)
         {
             var sut = new Domain.StringCalculator();
-            var result = sut.Add("1,3");
+            var result = sut.Add(numbers);
 
-            result.Should().Be(4);
+            result.Should().Be(expected);
         }
     }
 }
