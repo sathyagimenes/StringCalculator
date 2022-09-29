@@ -41,5 +41,24 @@ namespace StringCalculator
 
             act.Should().Throw<ArgumentException>().WithMessage("*numbers*");
         }
+
+        [Fact]
+        public void Add_WhenContainsNonNumber_ShouldThrowArgumentException()
+        {
+            var sut = new Domain.StringCalculator();
+
+            Action add = () => sut.Add("1,x");
+
+            add.Should().Throw<ArgumentException>().WithMessage("*numbers*");
+        }
+
+        [Fact]
+        public void Add_WhenValidInput_ReturnsSum()
+        {
+            var sut = new Domain.StringCalculator();
+            var result = sut.Add("1,3");
+
+            result.Should().Be(4);
+        }
     }
 }
